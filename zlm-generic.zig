@@ -289,9 +289,9 @@ pub fn specializeOn(comptime Real: type) type {
             pub fn transform(vec: Self, mat: Mat3) Self {
                 var result = zero;
                 inline for ([_]comptime_int{ 0, 1, 2 }) |i| {
-                    result.x += vec.getField(i) * mat.fields[0][i];
-                    result.y += vec.getField(i) * mat.fields[1][i];
-                    result.z += vec.getField(i) * mat.fields[2][i];
+                    result.x += vec.getField(i) * mat.fields[i][0];
+                    result.y += vec.getField(i) * mat.fields[i][1];
+                    result.z += vec.getField(i) * mat.fields[i][2];
                 }
                 return result;
             }
@@ -440,9 +440,9 @@ pub fn specializeOn(comptime Real: type) type {
                     inline for ([_]comptime_int{ 0, 1, 2, 3 }) |col| {
                         var sum: Real = 0.0;
                         inline for ([_]comptime_int{ 0, 1, 2, 3 }) |i| {
-                            sum += a.fields[row][i] * b.fields[i][col];
+                            sum += a.fields[i][row] * b.fields[col][i];
                         }
-                        result.fields[row][col] = sum;
+                        result.fields[col][row] = sum;
                     }
                 }
                 return result;
@@ -511,9 +511,9 @@ pub fn specializeOn(comptime Real: type) type {
                 var result = Self.zero;
                 result.fields[0][0] = 1.0 / (aspect * tanHalfFovy);
                 result.fields[1][1] = 1.0 / (tanHalfFovy);
-                result.fields[2][2] = -(far + near) / (far - near);
+                result.fields[2][2] = -far / (far - near);
                 result.fields[2][3] = -1;
-                result.fields[3][2] = -(2 * far * near) / (far - near);
+                result.fields[3][2] = -(far * near) / (far - near);
                 return result;
             }
 
